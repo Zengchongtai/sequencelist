@@ -1,13 +1,28 @@
 #include <stdio.h>
+#include <stdlib.h>
 #define MAX_DE 100
 typedef int elementType;
 
 typedef struct{
-    elementType data[MAX_DE];
+    elementType *data;
     int length;
 }seqlist;
 
-
+void free_memory(seqlist *L)
+{
+    if (L!=NULL)
+    {
+        free(L->data);
+        free(L);
+    }
+}
+seqlist* initialize_sequencelist()
+{
+    seqlist *L = (seqlist*)malloc(sizeof(seqlist));
+    L -> data = (elementType*)malloc(sizeof(elementType)*MAX_DE);
+    L ->length = 0;
+    return L;
+}
 void initialise_seqlist(seqlist *L)
 {
     L -> length = 0;
@@ -68,25 +83,43 @@ void delete_seqlist(seqlist *L, int position )
     L -> length--;
 }
 
+void search_seqlist(seqlist *L, int seq_text)
+{
+    for (int i=0; i< L -> length;i++)
+    {
+        if (L->data[i]==seq_text)
+        {
+            printf("find    number is %d",i+1);
+            return;
+        }
+    }
+    printf("not found");
+    return;
+}
+
 int main()
 {
-    seqlist list;
-    initialise_seqlist(&list);
-    add_seqlist(&list, 100);
-    add_seqlist(&list, 101);
-    add_seqlist(&list, 102);
-    add_seqlist(&list, 103);
-    add_seqlist(&list, 104);
-    add_seqlist(&list, 105);
-    cite_seqlist(&list);
+    //seqlist list;
+    seqlist *list = initialize_sequencelist();
+    //initialise_seqlist(&list);
+    add_seqlist(list, 100);
+    add_seqlist(list, 101);
+    add_seqlist(list, 102);
+    add_seqlist(list, 103);
+    add_seqlist(list, 104);
+    add_seqlist(list, 105);
+    cite_seqlist(list);
     printf("\n\n=============\n\n");
-    insert_seqlist(&list,3,114514);
+    insert_seqlist(list,3,114514);
     printf("====have been inserted====\n\n");
-    cite_seqlist(&list);
+    cite_seqlist(list);
     printf("\n\n=============\n\n");
-    delete_seqlist(&list,4);
+    delete_seqlist(list,4);
     printf("====have been deleted====\n\n");
-    cite_seqlist(&list);
+    cite_seqlist(list);
+    search_seqlist(list,109);
+
+    free_memory(list);
 
 
     return 0;
